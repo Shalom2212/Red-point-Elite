@@ -1,0 +1,14 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@500&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.fluid-word {
+  transition: opacity 100ms ease-in-out;
+}
+
+/* Base custom styles to reset anything inside our shadow dom to default to Inter */
+:host {
+  all: initial;
+}

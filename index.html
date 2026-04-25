@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Red Point Elite Test Environment</title>
+    <!-- Mock some host styles to ensure shadow dom works -->
+    <style>
+      body { background: white; color: black; font-family: serif; margin: 0; padding: 2rem; }
+      h1 { color: blue; }
+    </style>
+  </head>
+  <body>
+    <h1>Host Page Background</h1>
+    <p>This text is in the host page. The Red Point content script should overlay above this and not leak the dark theme or Tailwind to this text.</p>
+    
+    <script type="module" src="/src/content.jsx"></script>
+    <!-- In dev mode, Vite loads css as a module and injects it to <head>, but our shadow DOM looks for /content.css. We can mock it by fetching the exact styles -->
+    <script>
+      // Mock for standard vite css injection for dev testing
+      // Actually, since src/content.jsx imports './index.css', vite injects it to head. 
+      // We will copy those styles into our shadow dom for the dev environment:
+      setTimeout(() => {
+        const shadow = document.getElementById('red-point-elite-root')?.shadowRoot;
+        if (shadow) {
+          const styles = document.querySelectorAll('style');
+          styles.forEach(s => shadow.appendChild(s.cloneNode(true)));
+        }
+      }, 500);
+    </script>
+  </body>
+</html>
