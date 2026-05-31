@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Red Point Elite — Speed Reading Chrome Extension, Coming Soon</title>
+  <meta name="description" content="Read any webpage 3× faster with RSVP speed reading. Bionic mode, PDF support, 1200 WPM. Join the waitlist — launching soon." />
+  <meta property="og:title" content="Red Point Elite — Read Any Webpage 3× Faster" />
+  <meta property="og:description" content="RSVP speed reading for Chrome. Join the waitlist." />
+  <meta property="og:type" content="website" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Red Point Elite — Speed Reading for Chrome" />
+  <meta name="twitter:description" content="Read any webpage 3× faster. Join the waitlist." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --red:    #FF3B30;
+      --bg:     #0A0A0A;
+      --card:   #111111;
+      --border: rgba(255,255,255,0.07);
+      --text:   #e5e5e5;
+      --muted:  #666;
+    }
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--bg); color: var(--text);
+      font-family: 'Inter', system-ui, sans-serif;
+      line-height: 1.6; -webkit-font-smoothing: antialiased;
+      min-height: 100vh; display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      padding: 32px 20px;
+    }
+
+    /* ── Logo ── */
+    .logo {
+      display: flex; align-items: center; gap: 10px;
+      font-weight: 700; font-size: 15px; letter-spacing: -0.3px;
+      margin-bottom: 48px;
+    }
+    .logo-dot {
+      width: 32px; height: 32px; background: var(--red);
+      border-radius: 50%; display: flex; align-items: center;
+      justify-content: center; font-size: 15px;
+    }
+
+    /* ── Main card ── */
+    .card {
+      max-width: 560px; width: 100%; text-align: center;
+    }
+
+    .badge {
+      display: inline-flex; align-items: center; gap-6px;
+      background: rgba(255,59,48,0.1); border: 1px solid rgba(255,59,48,0.25);
+      color: var(--red); font-size: 11px; font-weight: 700;
+      letter-spacing: .08em; text-transform: uppercase;
+      padding: 5px 12px; border-radius: 20px; margin-bottom: 24px;
+    }
+
+    h1 {
+      font-size: clamp(2rem, 6vw, 3rem);
+      font-weight: 800; letter-spacing: -1.5px; line-height: 1.1;
+      margin-bottom: 16px;
+    }
+    h1 span { color: var(--red); }
+
+    .sub {
+      color: var(--muted); font-size: 1rem; max-width: 440px;
+      margin: 0 auto 36px; line-height: 1.7;
+    }
+
+    /* ── Demo ── */
+    .demo-wrap {
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: 16px; padding: 32px 24px; margin-bottom: 40px;
+      position: relative; overflow: hidden;
+    }
+    .demo-wrap::before {
+      content: ''; position: absolute; inset: 0;
+      background: radial-gradient(ellipse at 50% 0%, rgba(255,59,48,0.08) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .demo-label {
+      font-size: 10px; font-weight: 600; text-transform: uppercase;
+      letter-spacing: .1em; color: var(--muted); margin-bottom: 20px;
+    }
+    .demo-lines {
+      position: absolute; left: 0; right: 0;
+      top: 50%; transform: translateY(-6px);
+    }
+    .demo-line {
+      height: 1px; background: rgba(255,255,255,0.06);
+      margin: 12px 0;
+    }
+    .demo-word {
+      font-size: clamp(2rem, 7vw, 2.8rem);
+      font-weight: 700; letter-spacing: -0.5px;
+      line-height: 1; min-height: 1.2em;
+      position: relative; z-index: 1;
+    }
+    .demo-pivot { color: var(--red); }
+    .demo-meta {
+      font-size: 11px; color: var(--muted); margin-top: 16px;
+      display: flex; align-items: center; justify-content: center; gap: 16px;
+    }
+    .demo-wpm { color: var(--red); font-weight: 700; }
+    .demo-play-hint {
+      font-size: 11px; color: #333; text-transform: uppercase;
+      letter-spacing: .08em; margin-top: 12px; cursor: pointer;
+    }
+
+    /* ── Waitlist form ── */
+    .form-wrap { margin-bottom: 24px; }
+    .form-row {
+      display: flex; gap: 10px; max-width: 420px; margin: 0 auto;
+    }
+    .form-row input {
+      flex: 1; background: var(--card); border: 1px solid #2a2a2a;
+      color: #fff; border-radius: 10px; padding: 13px 16px;
+      font-size: 14px; outline: none; font-family: inherit;
+      transition: border-color .15s;
+    }
+    .form-row input:focus { border-color: #444; }
+    .form-row input::placeholder { color: #444; }
+    .form-btn {
+      background: var(--red); color: #fff; border: none;
+      border-radius: 10px; padding: 13px 20px; font-size: 14px;
+      font-weight: 700; cursor: pointer; white-space: nowrap;
+      font-family: inherit; transition: opacity .15s; flex-shrink: 0;
+    }
+    .form-btn:hover { opacity: .88; }
+    .form-btn:disabled { opacity: .5; cursor: not-allowed; }
+    .form-success {
+      display: none; color: #4CAF50; font-size: 13px;
+      margin-top: 12px; font-weight: 600;
+    }
+    .form-note {
+      font-size: 11px; color: #333; margin-top: 10px;
+    }
+
+    /* ── Features pills ── */
+    .features {
+      display: flex; flex-wrap: wrap; gap: 8px;
+      justify-content: center; margin-bottom: 40px;
+    }
+    .pill {
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: 20px; padding: 6px 14px; font-size: 12px; color: var(--muted);
+    }
+    .pill span { color: var(--red); margin-right: 4px; }
+
+    /* ── Countdown ── */
+    .countdown-wrap {
+      display: flex; gap: 16px; justify-content: center; margin-bottom: 40px;
+    }
+    .cd-block { text-align: center; }
+    .cd-num {
+      font-size: 2rem; font-weight: 800; letter-spacing: -1px;
+      color: #fff; line-height: 1; font-variant-numeric: tabular-nums;
+    }
+    .cd-label {
+      font-size: 10px; text-transform: uppercase; letter-spacing: .08em;
+      color: var(--muted); margin-top: 4px;
+    }
+    .cd-sep {
+      font-size: 2rem; font-weight: 800; color: #222;
+      line-height: 1; padding-top: 0;
+      display: flex; align-items: flex-start; padding-top: 4px;
+    }
+
+    /* ── Footer ── */
+    .footer {
+      margin-top: 48px; font-size: 11px; color: #2a2a2a;
+      display: flex; gap: 20px; justify-content: center;
+    }
+    .footer a { color: #333; }
+    .footer a:hover { color: #666; }
+  </style>
+</head>
+<body>
+
+<div class="logo">
+  <div class="logo-dot">⚡</div>
+  Red Point Elite
+</div>
+
+<div class="card">
+  <div class="badge">🚀 &nbsp;Launching Soon</div>
+
+  <h1>Read any webpage<br><span>3× faster</span></h1>
+  <p class="sub">
+    RSVP speed reading, bionic text, and smart chunking —
+    on any article, PDF, or page. No account needed.
+  </p>
+
+  <!-- Live demo -->
+  <div class="demo-wrap" id="demoWrap" style="cursor:pointer" title="Click to pause / resume">
+    <div class="demo-label">Try it — live demo at 300 WPM ↓</div>
+    <div class="demo-lines">
+      <div class="demo-line"></div>
+      <div class="demo-line"></div>
+    </div>
+    <div class="demo-word">
+      <span id="demoPrefix"></span><span class="demo-pivot" id="demoPivot">R</span><span id="demoSuffix">eading</span>
+    </div>
+    <div class="demo-meta">
+      <span class="demo-wpm" id="demoWpm">300</span>
+      <span>WPM</span>
+      <span id="demoProgress">0%</span>
+    </div>
+    <div class="demo-play-hint" id="demoHint">click to pause</div>
+  </div>
+
+  <!-- Features pills -->
+  <div class="features">
+    <div class="pill"><span>⚡</span>Up to 1200 WPM</div>
+    <div class="pill"><span>📖</span>Bionic reading</div>
+    <div class="pill"><span>📄</span>PDF support</div>
+    <div class="pill"><span>🧠</span>2 & 3-word chunks</div>
+    <div class="pill"><span>🎯</span>Zen mode</div>
+    <div class="pill"><span>🔥</span>Reading streak</div>
+  </div>
+
+  <!-- Countdown -->
+  <div class="countdown-wrap">
+    <div class="cd-block"><div class="cd-num" id="cdDays">--</div><div class="cd-label">Days</div></div>
+    <div class="cd-sep">:</div>
+    <div class="cd-block"><div class="cd-num" id="cdHours">--</div><div class="cd-label">Hours</div></div>
+    <div class="cd-sep">:</div>
+    <div class="cd-block"><div class="cd-num" id="cdMins">--</div><div class="cd-label">Mins</div></div>
+    <div class="cd-sep">:</div>
+    <div class="cd-block"><div class="cd-num" id="cdSecs">--</div><div class="cd-label">Secs</div></div>
+  </div>
+
+  <!-- Waitlist -->
+  <div class="form-wrap">
+    <div class="form-row">
+      <input type="email" id="emailInput" placeholder="your@email.com" autocomplete="email" />
+      <button class="form-btn" id="submitBtn" onclick="submitWaitlist()">Notify Me →</button>
+    </div>
+    <div class="form-success" id="formSuccess">✓ You're on the list! We'll email you the moment it launches.</div>
+    <p class="form-note">No spam. One email when we launch. Unsubscribe anytime.</p>
+  </div>
+</div>
+
+<div class="footer">
+  <span>© 2025 Red Point Elite</span>
+  <a href="privacy.html">Privacy Policy</a>
+</div>
+
+<script>
+  // ── RSVP demo ─────────────────────────────────────────────────────────────
+  const DEMO_TEXT = "Red Point Elite turns any webpage into a speed reading session. Words flash one at a time at the exact focal point your eyes naturally fall on. Your brain processes each word without moving your eyes at all. This eliminates subvocalization and physical eye movement — the two biggest limiters of reading speed. Most people read at 200 words per minute. With Red Point you can hit 400, 600, even 1000 WPM. Try it right now and feel the difference.";
+  const WPM  = 300;
+  const words = DEMO_TEXT.split(' ');
+  let idx = 0, playing = true, timer = null;
+
+  function orp(word) {
+    const clean = word.replace(/[^a-zA-Z]/g, '');
+    const pos = Math.max(0, Math.floor(clean.length / 4));
+    const raw = word;
+    let charCount = 0, pivotIdx = 0;
+    for (let i = 0; i < raw.length; i++) {
+      if (/[a-zA-Z]/.test(raw[i])) {
+        if (charCount === pos) { pivotIdx = i; break; }
+        charCount++;
+      }
+    }
+    return [raw.slice(0, pivotIdx), raw[pivotIdx] || '', raw.slice(pivotIdx + 1)];
+  }
+
+  function showWord() {
+    if (idx >= words.length) { idx = 0; }
+    const [pre, pivot, suf] = orp(words[idx]);
+    document.getElementById('demoPrefix').textContent = pre;
+    document.getElementById('demoPivot').textContent  = pivot;
+    document.getElementById('demoSuffix').textContent = suf;
+    document.getElementById('demoProgress').textContent = Math.round((idx / words.length) * 100) + '%';
+    idx++;
+  }
+
+  function tick() {
+    if (!playing) return;
+    showWord();
+    timer = setTimeout(tick, 60000 / WPM);
+  }
+
+  document.getElementById('demoWrap').addEventListener('click', () => {
+    playing = !playing;
+    document.getElementById('demoHint').textContent = playing ? 'click to pause' : 'click to resume';
+    if (playing) tick();
+  });
+
+  setTimeout(() => { playing = true; showWord(); tick(); }, 800);
+
+  // ── Countdown — launch in 7 days ─────────────────────────────────────────
+  (function() {
+    const KEY = 'rp_launch_deadline';
+    let deadline = localStorage.getItem(KEY);
+    if (!deadline) {
+      deadline = Date.now() + 7 * 24 * 60 * 60 * 1000;
+      localStorage.setItem(KEY, deadline);
+    }
+    deadline = Number(deadline);
+
+    function pad(n) { return String(n).padStart(2, '0'); }
+
+    function tick() {
+      const diff = deadline - Date.now();
+      if (diff <= 0) {
+        ['cdDays','cdHours','cdMins','cdSecs'].forEach(id => document.getElementById(id).textContent = '00');
+        return;
+      }
+      document.getElementById('cdDays').textContent  = pad(Math.floor(diff / 86400000));
+      document.getElementById('cdHours').textContent = pad(Math.floor((diff % 86400000) / 3600000));
+      document.getElementById('cdMins').textContent  = pad(Math.floor((diff % 3600000) / 60000));
+      document.getElementById('cdSecs').textContent  = pad(Math.floor((diff % 60000) / 1000));
+    }
+    tick();
+    setInterval(tick, 1000);
+  })();
+
+  // ── Waitlist form — uses Formspree ────────────────────────────────────────
+  // Sign up free at formspree.io, create a form, paste your endpoint below
+  const FORMSPREE_URL = 'https://formspree.io/f/mqewjjeo';
+
+  async function submitWaitlist() {
+    const email = document.getElementById('emailInput').value.trim();
+    if (!email || !email.includes('@')) {
+      document.getElementById('emailInput').focus();
+      return;
+    }
+    const btn = document.getElementById('submitBtn');
+    btn.disabled = true;
+    btn.textContent = '...';
+
+    try {
+      if (FORMSPREE_URL.includes('YOUR_FORM_ID')) {
+        // Dev mode — just show success without sending
+        console.log('Waitlist email (Formspree not configured):', email);
+      } else {
+        await fetch(FORMSPREE_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+          body: JSON.stringify({ email }),
+        });
+      }
+      document.getElementById('emailInput').style.display  = 'none';
+      btn.style.display = 'none';
+      document.getElementById('formSuccess').style.display = 'block';
+    } catch {
+      btn.disabled = false;
+      btn.textContent = 'Notify Me →';
+    }
+  }
+
+  document.getElementById('emailInput').addEventListener('keydown', e => {
+    if (e.key === 'Enter') submitWaitlist();
+  });
+</script>
+
+</body>
+</html>
